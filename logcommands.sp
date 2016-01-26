@@ -8,7 +8,7 @@ new String:g_sCmdLogPath[256];
 
 public Plugin:myinfo =
 {
-    name = "SM commands logger",
+    name = "SM Client Command Logging",
     author = "Franc1sco franug", 
     description = "Logging every command that the client use", 
     version = DATA, 
@@ -17,7 +17,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	CreateConVar("sm_commandslogger_version", DATA, "", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	CreateConVar("sm_clientcommandlogging_version", DATA, "", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
 	for(new i=0;;i++)
 	{
