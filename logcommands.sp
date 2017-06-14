@@ -21,7 +21,7 @@
 
 new String:g_sCmdLogPath[256];
 
-#define DATA "1.0"
+#define DATA "1.1"
 
 public Plugin:myinfo =
 {
@@ -34,7 +34,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	CreateConVar("sm_clientcommandlogging_version", DATA, "", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	CreateConVar("sm_clientcommandlogging_version", DATA, "", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
 	for(new i=0;;i++)
 	{
@@ -51,7 +51,7 @@ public OnAllPluginsLoaded()
 
 public Action:Commands_CommandListener(client, const String:command[], argc)
 {
-	if ( !client || !IsClientInGame(client))
+	if (client < 1 || !IsClientInGame(client))
 		return Plugin_Continue;
 
 
