@@ -1,6 +1,6 @@
 /*  SM Client Command Logging
  *
- *  Copyright (C) 2017 Francisco 'Franc1sco' García
+ *  Copyright (C) 2017-2020 Francisco 'Franc1sco' García
  * 
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -18,12 +18,22 @@
 #include <sourcemod>
 #include <sdktools>
 
+#pragma newdecls required
+#pragma semicolon 1
 
-new String:g_sCmdLogPath[256];
+// add here the ignore commands that will not logged (maybe a cfg file in a future)
+char ignoredCommands[][] =
+{
+	"+lookatweapon",
+	"-lookatweapon",
+	"snd_setsoundparam",
+};
 
-#define DATA "1.1"
+char g_sCmdLogPath[256];
 
-public Plugin:myinfo =
+#define DATA "2.0"
+
+public Plugin myinfo =
 {
     name = "SM Client Command Logging",
     author = "Franc1sco franug", 
@@ -32,11 +42,11 @@ public Plugin:myinfo =
     url = "http://steamcommunity.com/id/franug"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	CreateConVar("sm_clientcommandlogging_version", DATA, "", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
-	for(new i=0;;i++)
+	for(int i=0;;i++)
 	{
 		BuildPath(Path_SM, g_sCmdLogPath, sizeof(g_sCmdLogPath), "logs/CmdLog_%d.log", i);
 		if ( !FileExists(g_sCmdLogPath) )
@@ -44,20 +54,25 @@ public OnPluginStart()
 	}
 }
 
-public OnAllPluginsLoaded()
+public void OnAllPluginsLoaded()
 {
 	AddCommandListener(Commands_CommandListener);
 }
 
-public Action:Commands_CommandListener(client, const String:command[], argc)
+public Action Commands_CommandListener(int client, const char[] command, int argc)
 {
 	if (client < 1 || !IsClientInGame(client))
-		return Plugin_Continue;
+		return;
 
-
-	decl String:f_sCmdString[256];
+	char f_sCmdString[2048];
+	GetCmdArg(0, f_sCmdString, sizeof(f_sCmdString));
+	
+	for (int i = 0; i < sizeof(ignoredCommands); i++)
+	{
+		if(StrEqual(f_sCmdString, ignoredCommands[i]))
+			return;	
+	}
+	
 	GetCmdArgString(f_sCmdString, sizeof(f_sCmdString));
 	LogToFileEx(g_sCmdLogPath, "%L used: %s %s", client, command, f_sCmdString);
-
-	return Plugin_Continue;
 }
