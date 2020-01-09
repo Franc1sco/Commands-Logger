@@ -27,11 +27,18 @@ char ignoredCommands[][] =
 	"+lookatweapon",
 	"-lookatweapon",
 	"snd_setsoundparam",
+	"vmodenable",
+	"vban",
+	"menuopen",
+	"menuclosed",
+	"menuselect",
+	"voicemenu",
+	
 };
 
 char g_sCmdLogPath[256];
 
-#define DATA "2.0"
+#define DATA "2.0.1"
 
 public Plugin myinfo =
 {
