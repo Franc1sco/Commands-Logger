@@ -38,7 +38,7 @@ char ignoredCommands[][] =
 
 char g_sCmdLogPath[256];
 
-#define DATA "2.0.1"
+#define DATA "2.0.2"
 
 public Plugin myinfo =
 {
@@ -68,7 +68,7 @@ public void OnAllPluginsLoaded()
 
 public Action Commands_CommandListener(int client, const char[] command, int argc)
 {
-	if (client < 1 || !IsClientInGame(client))
+	if (client < 1)
 		return;
 
 	char f_sCmdString[2048];
@@ -81,5 +81,9 @@ public Action Commands_CommandListener(int client, const char[] command, int arg
 	}
 	
 	GetCmdArgString(f_sCmdString, sizeof(f_sCmdString));
-	LogToFileEx(g_sCmdLogPath, "%L used: %s %s", client, command, f_sCmdString);
+	
+	if(!IsClientInGame(client))
+		LogToFileEx(g_sCmdLogPath, "No ingame client %i used: %s %s", client, command, f_sCmdString);
+	else
+		LogToFileEx(g_sCmdLogPath, "%L used: %s %s", client, command, f_sCmdString);
 }
